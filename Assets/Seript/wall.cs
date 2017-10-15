@@ -21,7 +21,7 @@ public class wall : MonoBehaviour {
             i++;
             print("pass : "+i);
             Destroy(col.gameObject);            
-            score.Instance.AddScore();
+            //score.Instance.AddScore();
         }
        
     }

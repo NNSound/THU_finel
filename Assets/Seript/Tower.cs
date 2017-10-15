@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Tower : MonoBehaviour {
 	public GameObject ProjectilePrefab;//子彈
+	public GameObject Tower_obj;
 	public float ShootDelaySeconds = 1;//射擊頻率
-
 	public Enemy CurrentTarget;//當前射擊目標 
 	float _lastShotTime;
 
@@ -15,19 +15,29 @@ public class Tower : MonoBehaviour {
 		}
 		_lastShotTime = Time.time;
 	}
-	
+
+	void OnTriggerEnter2D(Collider2D other){
+		if (CurrentTarget == null || !CurrentTarget.IsAlive) {//會一直檢查我有沒有目標
+
+			CurrentTarget = Enemy.FindNextAlive();//會拿到有Alive tag的obj
+			var a= gameObject.transform.position - CurrentTarget.transform.position;
+			print (a.magnitude);
+
+		}
+		//print ("in tigger");
+
+	}
 	// Update is called once per frame
 	void Update () {
 		// update CurrentTarget
-		if (CurrentTarget == null || !CurrentTarget.IsAlive) {//會一直檢查我有沒有目標 
-			CurrentTarget = Enemy.FindNextAlive();//會拿到有Alive tag的obj
-		}
 
-		if (CurrentTarget != null) {
+		if (CurrentTarget != null ) {
 			RotateTowardTarget ();
 			ShootAtTarget ();
 		}
+
 	}
+
 
 	void RotateTowardTarget() {//應該是計算角度
 		Vector3 targetDir = CurrentTarget.transform.position - transform.position;//算出位置差據
@@ -55,7 +65,6 @@ public class Tower : MonoBehaviour {
 		var rigidBody = go.GetComponent<Rigidbody2D> ();
 		var direction = CurrentTarget.transform.position - go.transform.position;
 		direction.Normalize ();//使向量大小為 1
-
 		rigidBody.velocity = direction * projectile.Speed;
 
 		_lastShotTime = now;

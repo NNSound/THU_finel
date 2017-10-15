@@ -23,9 +23,9 @@ public class Enemy : MonoBehaviour {
 	public float MaxDistanceToGoal = .1f;
 	public float Speed = 5;
 
-	//public WavePath Path;
+	public WavePath Path;
 
-	//Wave _wave;
+	Wave _wave;
 
 	IEnumerator<Transform> _pathIterator;
 	
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour {
 		
 		get { return Health > 0; }
 	}
-	/*
+	
 	public void InitEnemy(Wave wave) {
 		Debug.Assert (wave != null);
 		
@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour {
 		
 		RestartPath ();
 	}
-	*/
+	
 	public void Damage(float damage) {
 		if (!IsAlive) {
 			// don't do anything when dead
@@ -70,20 +70,20 @@ public class Enemy : MonoBehaviour {
 		
 	}
 	#endregion
-/*
+
 	void RestartPath() {
 		if (Path != null) {
 			_pathIterator = Path.GetPathEnumeratorForward ();
 			_pathIterator.MoveNext ();
 		}
 	}
-*/
+
 
 	// Use this for initialization
 	void Start () {
 		tag = AliveTag;
 
-		//RestartPath ();
+		RestartPath ();
 	}
 
 	// Update is called once per frame
