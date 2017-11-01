@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class choose_level : MonoBehaviour
+public class choose_level_d : MonoBehaviour
 {
     //套用物件 : left_bot、right_bot
     //簡短說明 : 左右選擇關卡，當滑鼠移動到物件上時放大物件
@@ -10,7 +10,7 @@ public class choose_level : MonoBehaviour
     public GameObject pict1,pict2,pict3;
     void OnMouseUp()
     {
-        confirm_bot.lv_counter++;
+        confirm_bot.lv_counter--;
         //bot = gameObject.GetComponent<confirm_bot>();
         //bot.cho_level();
         if (confirm_bot.lv_counter % 3 ==1)

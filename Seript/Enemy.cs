@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour {
 	public static Enemy FindNextAlive() {
 		var obj =  GameObject.FindGameObjectWithTag(AliveTag);
 		if (obj != null) {
-			return obj.GetComponent<Enemy> ();
+			return obj.GetComponent<Enemy> ();//將找到的物件回傳，Tower.Update()會需要一直拿到
 		}
 		return null;
 	}
@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour {
 		get { return Health > 0; }
 	}
 	
-	public void InitEnemy(Wave wave) {
+	public void InitEnemy(Wave wave) {//還不知道幹嘛用
 		Debug.Assert (wave != null);
 		
 		_wave = wave;
@@ -65,14 +65,14 @@ public class Enemy : MonoBehaviour {
 	
 	void OnReachedGoal() {
 		// TODO: Enemy arrived at end of path
-		
+		Destroy(gameObject);
 	}
 	#endregion
 
 	void RestartPath() {
 		if (Path != null) {
-			_pathIterator = Path.GetPathEnumeratorForward ();
-			_pathIterator.MoveNext ();
+			_pathIterator = Path.GetPathEnumeratorForward ();//只要叫了_pathIterator 就會給我現在的的目標物件
+			_pathIterator.MoveNext ();//下一個子物件
 		}
 		if(Path == null){
 			print ("path not find");
@@ -94,21 +94,22 @@ public class Enemy : MonoBehaviour {
 	}
 
 
-	void MoveAlongPath() {
+	void MoveAlongPath() {//沿著WavePath設定好的路線移動 會一直拿 路徑子物件的位置來移動
 		if (_pathIterator == null || _pathIterator.Current == null)
 			return;
 		
 		// move towards current target
 		var targetPosition = _pathIterator.Current.position;
 		transform.position = Vector3.MoveTowards (transform.position, targetPosition, Time.deltaTime * Speed);
-		
+		//朝向目標移動
 		// check if we reached target
 		var distanceSquared = (transform.position - targetPosition).sqrMagnitude;
-		if (distanceSquared < MaxDistanceToGoal * MaxDistanceToGoal) {
+		if (distanceSquared < MaxDistanceToGoal * MaxDistanceToGoal) {//快到點了 就指向下一個目標
 			// we arrived at current target -> Choose next target
 			_pathIterator.MoveNext();
 			if (_pathIterator.Current == null) {
-				OnReachedGoal();
+				//吃不到這邊
+				OnReachedGoal();//已達終點
 			}
 		}
 	}

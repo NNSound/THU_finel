@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Start_game : MonoBehaviour {
-
+//這支腳本也暫時不用了 我直接叫場景比較快
     public GameObject cover;
     public GameObject left;
     public GameObject right;
@@ -34,14 +34,7 @@ public class Start_game : MonoBehaviour {
         Instantiate(lv1, lv_pos, transform.rotation);       
         //print("it work");
     }
-    void OnMouseEnter()
-    {
-        this.gameObject.transform.localScale = new Vector3(2, 2, 1);
-    }
-    void OnMouseExit()
-    {
-        this.gameObject.transform.localScale = new Vector3(1, 1, 1);
-    }
+    
 }
  
 /*

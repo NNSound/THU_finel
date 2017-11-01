@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class new_emeny : MonoBehaviour {
+    //製造怪物已經給Wave Generator 處理了 這裡暫時沒用了
     public GameObject Emeny; //宣告物件，名稱Emeny
     public GameObject map;
-    public float sortingOrder = 10;
 
     float time; //宣告浮點數，名稱time
     int eneny_num;
