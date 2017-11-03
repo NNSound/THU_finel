@@ -6,13 +6,6 @@ public class make_tower_mouse : MonoBehaviour {
     public GameObject tower;
     bool haveTower = false;
     // Use this for initialization
-    void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
     void OnMouseUp()
     {
         if (!haveTower){

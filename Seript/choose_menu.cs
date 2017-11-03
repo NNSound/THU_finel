@@ -7,16 +7,6 @@ public class choose_menu : MonoBehaviour
 {
 
     //選擇場景 我想把它直接做成一隻靈活的腳本 不需要一個場景就一隻腳本
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     void OnMouseUp()
     {
         SceneManager.LoadScene("menu");
