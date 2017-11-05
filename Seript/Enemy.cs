@@ -5,6 +5,9 @@ using System;
 
 
 public class Enemy : MonoBehaviour {
+	//掛載物件:emeny
+	//調用物件:GameManager、Wave、Projectil、Tower
+	//說明:emeny之移動、生命、死亡等等
 	public static readonly string AliveTag = "Alive";
 	public static readonly string DeadTag = "Dead";
 	
@@ -33,7 +36,7 @@ public class Enemy : MonoBehaviour {
 		get { return Health > 0; }
 	}
 	
-	public void InitEnemy(Wave wave) {//還不知道幹嘛用
+	public void InitEnemy(Wave wave) {
 		Debug.Assert (wave != null);
 		
 		_wave = wave;

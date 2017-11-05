@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class make_tower_mouse : MonoBehaviour {
-    public GameObject tower;
-    bool haveTower = false;
+    //掛載物件:ground_squire_obj
+	//調用物件:null
+	//說明:在方格上建立塔座
+    public bool haveTower = false;
+    public gameSystem Sys;
     // Use this for initialization
     void OnMouseUp()
     {
+        Sys = GetComponentInParent<gameSystem>();
         if (!haveTower){
-            haveTower = true;
-            Vector3 me = transform.position;
-            GameObject childTower =  Instantiate(tower, me, transform.rotation);
-            childTower.transform.parent = transform;  
+            Sys.makeTowerPanel(gameObject);  
         }
         
     }

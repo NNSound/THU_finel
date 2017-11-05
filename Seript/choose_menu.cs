@@ -4,18 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class choose_menu : MonoBehaviour
-{
-
-    //選擇場景 我想把它直接做成一隻靈活的腳本 不需要一個場景就一隻腳本
+{//調用物件:Start_obj
+    //選擇場景
     void OnMouseUp()
     {
-        SceneManager.LoadScene("menu");
+        SceneManager.LoadScene("menu");//移動到menu場景
     }
-    void OnMouseEnter()
+    void OnMouseEnter()//滑鼠移動到上面時，放大
     {
         this.gameObject.transform.localScale = new Vector3(0.6f, 0.6f, 1);
     }
-    void OnMouseExit()
+    void OnMouseExit()//滑鼠移動到上面時，回復原樣
     {
         this.gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 1);
     }

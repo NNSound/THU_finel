@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Layer : MonoBehaviour {
+    //掛載物件:Tower
+	//調用物件:null
+	//說明:Tower之圖層前後設定
     float sortingOrder;
     private SpriteRenderer sprite;
 
@@ -17,8 +20,4 @@ public class Layer : MonoBehaviour {
         
     }
 	
-	// Update is called once per frame
-	void Update () {
-       
-    }
 }

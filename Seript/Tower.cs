@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Tower : MonoBehaviour {
+	//掛載物件:Tower
+	//調用物件:null
+	//說明:塔座之射擊
 	public GameObject ProjectilePrefab;//子彈
 	public float ShootDelaySeconds = 1;//射擊頻率
 

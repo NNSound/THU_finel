@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class WaveGenerator : MonoBehaviour {
+	//掛載物件:make_emeny
+	//調用物件:Enemy、GameManager、Wave
+	//說明:動態生產Emeny，控制產出時間、間隔、數量、波數。
 	/// <summary>
 	/// Time between waves in seconds.
 	/// </summary>

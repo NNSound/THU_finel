@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class WavePath : MonoBehaviour {
+	//掛載物件:Wave
+	//調用物件:Emeny、WaveGenerator
+	//說明:路徑規劃與回傳
 	/// <summary>
 	/// Enumerates over all points
 	/// </summary>

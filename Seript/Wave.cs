@@ -5,6 +5,9 @@ using System;
 
 [Serializable]
 public class Wave {
+	//掛載物件:null
+	//調用物件:
+	//說明:
 	public WaveGenerator WaveGenerator;
 	public WaveTemplate WaveTemplate;
 
