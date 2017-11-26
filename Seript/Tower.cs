@@ -9,6 +9,7 @@ public class Tower : MonoBehaviour {
 	public float ShootDelaySeconds = 1;//射擊頻率
 
 	public Enemy CurrentTarget;//當前射擊目標 
+	public gameSystem Select;
 	float _lastShotTime;
 
 	// Use this for initialization
@@ -52,8 +53,8 @@ public class Tower : MonoBehaviour {
 		}
 
 		// shoot a new projectile ,射出子彈
-		var go = (GameObject)Instantiate(ProjectilePrefab, transform.position, transform.rotation);        
-        go.transform.parent = gameObject.transform;//做為塔的子物件        
+		var go = (GameObject)Instantiate(ProjectilePrefab, transform.position, transform.rotation);
+        go.transform.parent = gameObject.transform;//做為塔的子物件
         var projectile = go.GetComponent<Projectile> ();
 		var rigidBody = go.GetComponent<Rigidbody2D> ();
 		var direction = CurrentTarget.transform.position - go.transform.position;
@@ -62,5 +63,12 @@ public class Tower : MonoBehaviour {
 		rigidBody.velocity = direction * projectile.Speed;
 
 		_lastShotTime = now;
+	}
+
+	void OnMouseDown()
+	{
+		//print (gameObject.name);
+		Select = gameObject.GetComponent<gameSystem>();
+		Select.hightlight(gameObject);
 	}
 }

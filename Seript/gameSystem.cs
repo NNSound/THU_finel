@@ -8,22 +8,24 @@ public class gameSystem : MonoBehaviour {
 	//說明:存放副程式以方便Button調用與維護
 	public GameObject Makepanel;
 	private GameObject floor;
-	make_tower_mouse mtm;
+	public GameObject isSelect;
+	public make_tower_mouse mtm;
 	
-	public GameObject makeTowerPanel(GameObject obj){
+	public bool makeTowerPanel(GameObject obj){
 		//print ("makeTowerPanel");
 		Makepanel.gameObject.SetActive(true);
 		floor = obj;
-		return obj;
+		return true;
 	}
 	public void makeTower(GameObject tower){
             Vector3 me = floor.transform.position;
             GameObject childTower =  Instantiate(tower, me, transform.rotation);
             childTower.transform.parent = floor.transform;
 			Makepanel.gameObject.SetActive(false);
-			mtm = tower.GetComponent<make_tower_mouse>();
-			mtm.haveTower = true;           
         
+	}
+	public void hightlight(GameObject obj){
+		obj.transform.GetChild(0).gameObject.SetActive(true);
 	}
 	
 }
