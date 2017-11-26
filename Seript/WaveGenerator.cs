@@ -17,11 +17,12 @@ public class WaveGenerator : MonoBehaviour {
 	
 	public WaveTemplate[] WaveTemplates;
 
-	public Text InfoText;
+	public Text InfoText,WaveText;
 
 	List<Wave> _waves;
 
 	float _lastUpdate;
+	public setText setText;
 
 	public Wave CurrentWave {
 		get {
@@ -30,7 +31,8 @@ public class WaveGenerator : MonoBehaviour {
 	}
 
 	public int CurrentWaveNumber {
-		get {
+		
+		get {			
 			return _waves.Count+1;
 		}
 	}
@@ -57,6 +59,13 @@ public class WaveGenerator : MonoBehaviour {
 	void ShowText(string text) {
 		if (InfoText != null) {
 			InfoText.text = text;
+		}
+	}
+	void ShowWaveText(int waveindex) {
+		if (WaveText != null) {
+			
+			setText.recover();
+			WaveText.text = "Wave "+(waveindex-1);
 		}
 	}
 
@@ -94,9 +103,9 @@ public class WaveGenerator : MonoBehaviour {
 		var timeSinceLastUpdate = now - _lastUpdate;
 
 		ShowText("Next wave: " + CurrentWaveNumber + " (" + (DelayBetweenWaves - timeSinceLastUpdate).ToString ("0") + "s)");
-		
 		if (timeSinceLastUpdate >= DelayBetweenWaves) {
 			StartNextWave ();
+			ShowWaveText(CurrentWaveNumber);//要改
 		}
 	}
 	
