@@ -68,7 +68,7 @@ public class Tower : MonoBehaviour {
 	void OnMouseDown()
 	{
 		//print (gameObject.name);
-		Select = gameObject.GetComponent<gameSystem>();
+		Select = gameObject.GetComponentInParent<gameSystem>();
 		Select.hightlight(gameObject);
 	}
 }

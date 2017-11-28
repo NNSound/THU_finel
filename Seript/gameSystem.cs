@@ -17,14 +17,17 @@ public class gameSystem : MonoBehaviour {
 		floor = obj;
 		return true;
 	}
-	public void makeTower(GameObject tower){
+	public void makeTower(GameObject tower){//btn 呼叫的
             Vector3 me = floor.transform.position;
             GameObject childTower =  Instantiate(tower, me, transform.rotation);
             childTower.transform.parent = floor.transform;
 			Makepanel.gameObject.SetActive(false);
-        
+
 	}
 	public void hightlight(GameObject obj){
+		if(isSelect !=null )
+			isSelect.transform.GetChild(0).gameObject.SetActive(false);
+		isSelect = obj;
 		obj.transform.GetChild(0).gameObject.SetActive(true);
 	}
 	
