@@ -6,11 +6,15 @@ public class Tower : MonoBehaviour {
 	//調用物件:null
 	//說明:塔座之射擊
 	public GameObject ProjectilePrefab;//子彈
+	public GameObject EnemyList;
 	public float ShootDelaySeconds = 1;//射擊頻率
 
 	public Enemy CurrentTarget;//當前射擊目標 
 	public gameSystem Select;
 	float _lastShotTime;
+	float distance;
+
+	public float attrange = 5;
 
 	// Use this for initialization
 	void Start () {//檢查有沒有子彈
@@ -18,6 +22,7 @@ public class Tower : MonoBehaviour {
 			Debug.LogError("Tower is missing Projectile Prefab", this);
 		}
 		_lastShotTime = Time.time;
+		EnemyList = GameObject.Find("make_emeny");
 	}
 	
 	// Update is called once per frame
@@ -25,11 +30,15 @@ public class Tower : MonoBehaviour {
 		// update CurrentTarget
 		if (CurrentTarget == null || !CurrentTarget.IsAlive) {//會一直檢查我有沒有目標 
 			CurrentTarget = Enemy.FindNextAlive();//會拿到有Alive tag的obj
+			//print ("finding");
 		}
 
-		if (CurrentTarget != null) {
-			RotateTowardTarget ();
-			ShootAtTarget ();
+		if (CurrentTarget != null ) {
+				RotateTowardTarget ();
+				ShootAtTarget ();
+				//print ("in loop");
+			//attecter();
+			//range();
 		}
 	}
 
@@ -70,5 +79,39 @@ public class Tower : MonoBehaviour {
 		//print (gameObject.name);
 		Select = gameObject.GetComponentInParent<gameSystem>();
 		Select.hightlight(gameObject);
+	}
+	void attecter(){
+		var now = Time.time;
+		var delay = now - _lastShotTime;
+		if (delay < ShootDelaySeconds) {
+			// still on cooldown
+			return;
+		}
+		CurrentTarget.Health=CurrentTarget.Health-50;
+	}
+	/*
+	bool range(){
+		//Vector3 r = CurrentTarget.transform.position -gameObject.transform.position;
+		distance = (CurrentTarget.transform.position - gameObject.transform.position).magnitude;
+		//print (distance);
+		if (distance< attrange)
+			return true;
+		else{
+			CurrentTarget = Enemy.FindNextAlive();
+			//CurrentTarget = null;
+			print ("next");
+			return false;
+		}	
+	}
+	*/
+	GameObject FindEnemy(){
+		for(int i =0;i<EnemyList.transform.childCount;i++){
+			var obj =EnemyList.transform.GetChild(i);
+			distance = (obj.position - gameObject.transform.position).magnitude;
+			if(distance< attrange)
+				//print (obj.gameObject);
+				return obj.gameObject;
+		}
+		return null;
 	}
 }

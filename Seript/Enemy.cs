@@ -49,8 +49,7 @@ public class Enemy : MonoBehaviour {
 		if (!IsAlive) {
 			// don't do anything when dead
 			return;
-		}
-		
+		}		
 		Health -= damage;
 		
 		if (!IsAlive) {

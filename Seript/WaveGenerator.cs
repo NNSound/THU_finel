@@ -17,11 +17,12 @@ public class WaveGenerator : MonoBehaviour {
 	
 	public WaveTemplate[] WaveTemplates;
 
-	public Text InfoText,WaveText;
+	public Text InfoText;
 
 	List<Wave> _waves;
 
 	float _lastUpdate;
+	
 	//public setText setText;
 
 	public Wave CurrentWave {
@@ -127,6 +128,7 @@ public class WaveGenerator : MonoBehaviour {
 	// start next enemy of given wave
 	public void SpawnNextEnemy(Wave wave) {
 		var enemyObject = Instantiate (wave.WaveTemplate.EnemyPrefab);
+		enemyObject.transform.parent = gameObject.transform;
 		var enemy = enemyObject.GetComponent<Enemy> ();
 		enemy.InitEnemy (wave);
 		wave.Enemies.Add (enemy);

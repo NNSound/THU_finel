@@ -10,6 +10,7 @@ public class WavePath : MonoBehaviour {
 	/// <summary>
 	/// Enumerates over all points
 	/// </summary>
+	public static int  index;
 	public IEnumerator<Transform> GetPathEnumeratorForward() {
 		for (var i = 0; i < transform.childCount; ++i) {//取得下一個節點物件
 			yield return transform.GetChild(i);
