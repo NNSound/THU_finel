@@ -67,7 +67,13 @@ public class Enemy : MonoBehaviour {
 	
 	void OnReachedGoal() {
 		// TODO: Enemy arrived at end of path
+		var home = gameObject.transform.parent.gameObject.GetComponentInParent<gameSystem>();
+		home.treeHealth--;
+		home.ShowText();		
 		Destroy(gameObject);
+		if(home.treeHealth<=0){
+			home.endgame();
+		}
 	}
 	#endregion
 
@@ -97,8 +103,11 @@ public class Enemy : MonoBehaviour {
 
 
 	void MoveAlongPath() {//沿著WavePath設定好的路線移動 會一直拿 路徑子物件的位置來移動
+	//print ("_pathIterator.Current:"+_pathIterator.Current);
 		if (_pathIterator == null || _pathIterator.Current == null)
 			return;
+		
+			
 		
 		// move towards current target
 		var targetPosition = _pathIterator.Current.position;

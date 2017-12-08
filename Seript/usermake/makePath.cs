@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class makePath : MonoBehaviour {
 	public GameObject path;
-	public int x,y;
+	
 	void Start() {
 		path = GameObject.Find("path");
 	}
@@ -12,6 +12,5 @@ public class makePath : MonoBehaviour {
 	{
 		gameObject.GetComponent<SpriteRenderer>().color = Color.red;
 		gameObject.transform.parent = path.transform;
-		print("x:"+x+"y:"+y);
 	}
 }

@@ -5,12 +5,18 @@ using UnityEngine;
 public class Loadmap : MonoBehaviour {
 	public GameObject [] MapObj=new GameObject[5];
 	GameObject Wavepath,path,startpath;
+	public GameObject makeEmeny;
 
 	// Use this for initialization
 	void Start () {
-		var str = PlayerPrefs.GetString("mapinfo");
+		//map1-1 , map1-2
+		if(GameInfo.menuChoose==null){
+			print ("null");
+			GameInfo.menuChoose = "map1-1";
+		}			
+		var str = PlayerPrefs.GetString(GameInfo.menuChoose);
 		//print (str.Length);
-		int len=0;
+		//int len=0;
 		var loadmap = new GameObject();
 		path = new GameObject();
 		Wavepath = new GameObject();
@@ -20,17 +26,19 @@ public class Loadmap : MonoBehaviour {
 		loadmap.transform.parent = gameObject.transform;
 		path.transform.parent= gameObject.transform;
 		Wavepath.transform.parent= gameObject.transform;
+		//loadmap.AddComponent<gameSystem>();
 
-		for(var i=0;i<16;i++)
+		for(var i=0;i<16;i++)//make map
 			for(int j=0;j<9;j++){
 				var a = str.Substring(i*9+j,1);
 				var setGround = new Vector3(-7.5f+i, -4f+j, 0);				
 				if(a.Equals("1")){
 					GameObject newfloor =  Instantiate(MapObj[0], setGround, transform.rotation);
                 	newfloor.transform.parent = path.transform;
-                	newfloor.AddComponent<makePath>();
-                	newfloor.AddComponent<BoxCollider2D>();
-               		var setpos =newfloor.GetComponent<makePath>();
+                	//newfloor.AddComponent<makePath>();
+                	//newfloor.AddComponent<BoxCollider2D>();
+					newfloor.AddComponent<floorInfo>();
+               		var setpos =newfloor.GetComponent<floorInfo>();
                 	setpos.x=i;setpos.y=j;
 					newfloor.GetComponent<SpriteRenderer>().color = Color.red;
 				}
@@ -38,9 +46,11 @@ public class Loadmap : MonoBehaviour {
 					startpath =  Instantiate(MapObj[0], setGround, transform.rotation);
 					startpath.name = "startpath";
                 	startpath.transform.parent = Wavepath.transform;
-                	startpath.AddComponent<makePath>();
-                	startpath.AddComponent<BoxCollider2D>();
-               		var setpos =startpath.GetComponent<makePath>();
+                	//startpath.AddComponent<makePath>();
+                	//startpath.AddComponent<BoxCollider2D>();
+					startpath.AddComponent<floorInfo>();
+
+               		var setpos =startpath.GetComponent<floorInfo>();
                 	setpos.x=i;setpos.y=j;
 					startpath.GetComponent<SpriteRenderer>().color = Color.red;
 
@@ -48,9 +58,11 @@ public class Loadmap : MonoBehaviour {
 				else{
 					GameObject newfloor =  Instantiate(MapObj[0], setGround, transform.rotation);
                 	newfloor.transform.parent = loadmap.transform;
-                	newfloor.AddComponent<makePath>();
-                	newfloor.AddComponent<BoxCollider2D>();
-                	var setpos =newfloor.GetComponent<makePath>();
+                	//newfloor.AddComponent<makePath>();
+                	//newfloor.AddComponent<BoxCollider2D>();
+					newfloor.AddComponent<floorInfo>();
+
+                	var setpos =newfloor.GetComponent<floorInfo>();
                 	setpos.x=i;setpos.y=j;
 				}
 					
@@ -60,25 +72,34 @@ public class Loadmap : MonoBehaviour {
 		//print (startpath);
 		Pathsort();
 
+		makeEmeny.transform.position = startpath.transform.position;
+		makeEmeny.GetComponent<WaveGenerator>().Path = Wavepath.GetComponent<WavePath>();
+		
+
 	}
 	
 	// Update is called once per frame
 	public void Pathsort(){
 		var index =0;
+		int pathindex=1;
 		var breakindex=0;
 		var standard = startpath;
 		while (path.transform.childCount>0){
 			var obj = path.transform.GetChild(index).gameObject;
-			var posxy = obj.GetComponent<makePath>();
-			var standardxy = standard.GetComponent<makePath>();
+			var posxy = obj.GetComponent<floorInfo>();
+			var standardxy = standard.GetComponent<floorInfo>();
 			int m = Mathf.Abs(standardxy.x-posxy.x);
 			int n = Mathf.Abs(standardxy.y-posxy.y);
 			if(m==1&&n==0){//posxy 為下個路徑左右
 				obj.transform.parent = Wavepath.transform;
+				obj.name="path"+pathindex;
+				pathindex++;
 				standard = obj;
 			}
 			if(m==0&&n==1){//posxy 為下個路徑上下
 				obj.transform.parent = Wavepath.transform;
+				obj.name="path"+pathindex;
+				pathindex++;
 				standard = obj;
 			}
 			index++;

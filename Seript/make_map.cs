@@ -15,7 +15,8 @@ public class make_map : MonoBehaviour {
                 newfloor.transform.parent = gameObject.transform;
                 newfloor.AddComponent<makePath>();
                 newfloor.AddComponent<BoxCollider2D>();
-                var setpos =newfloor.GetComponent<makePath>();
+                newfloor.AddComponent<floorInfo>();
+                var setpos =newfloor.GetComponent<floorInfo>();
                 setpos.x=i;setpos.y=j;
             }
         }

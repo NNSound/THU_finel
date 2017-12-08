@@ -12,6 +12,8 @@ public class gameSystem : MonoBehaviour {
 	public GameObject Makepanel;
 	private GameObject floor;
 	public GameObject isSelect;
+	public GameObject endCanvas;
+	public int treeHealth = 20;
 	
 	//public make_tower_mouse mtm;
 	public Text CoinText;
@@ -33,7 +35,7 @@ public class gameSystem : MonoBehaviour {
 			Vector3 me = floor.transform.position;
             GameObject childTower =  Instantiate(tower, me, transform.rotation);
             childTower.transform.parent = floor.transform;
-			ShowText("Coin : "+coin);
+			ShowText();
 			Makepanel.gameObject.SetActive(false);
 
 	}
@@ -48,10 +50,15 @@ public class gameSystem : MonoBehaviour {
 		isSelect = obj;
 		obj.transform.GetChild(0).gameObject.SetActive(true);
 	}	
-	void ShowText(string text) {
+	public void ShowText() {
 		if (CoinText != null) {
-			CoinText.text = text;
+			CoinText.text = "Coin : "+coin+" Health:"+treeHealth+"/20";
 		}
+	}
+	public void endgame(){
+		Time.timeScale = 0f;
+		endCanvas.SetActive(true);
+		print ("You lose");
 	}
 	
 	

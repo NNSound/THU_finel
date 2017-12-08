@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class sort : MonoBehaviour {
 	public GameObject Wavepath;
 	public GameObject floorObj;
+	public Text savename;
 	
 	int nameIndex =0;
 	
@@ -14,8 +15,11 @@ public class sort : MonoBehaviour {
 			index.name="path"+nameIndex;
 			nameIndex++;
 			index.transform.parent = Wavepath.transform;
-			var getXY = index.GetComponent<makePath>();
-			GameInfo.floors[getXY.x,getXY.y]=9;
+			var getXY = index.GetComponent<floorInfo>();
+			if(Wavepath.transform.childCount>0)
+				GameInfo.floors[getXY.x,getXY.y]=1;
+			else
+				GameInfo.floors[getXY.x,getXY.y]=9;
 			int i=0;
 			while(gameObject.transform.childCount >0){
 				if(i > gameObject.transform.childCount-1){
@@ -28,7 +32,7 @@ public class sort : MonoBehaviour {
 					nameIndex++;
 					index = gameObject.transform.GetChild(i);
 					index.transform.parent = Wavepath.transform;
-					getXY = index.GetComponent<makePath>();
+					getXY = index.GetComponent<floorInfo>();
 					i=0;
 					GameInfo.floors[getXY.x,getXY.y]=1;
 					continue;
@@ -47,9 +51,14 @@ public class sort : MonoBehaviour {
 		for(var i=0;i<16;i++)
 			for(int j=0;j<9;j++){
 				str+=GameInfo.floors[i,j].ToString();
-			}			
-		PlayerPrefs.SetString("mapinfo",str);
-		print (str);
+			}
+		GameInfo.mapStr=str;
+		
+		if(savename.text!=null){
+			PlayerPrefs.SetString(savename.text,GameInfo.mapStr);
+			GameInfo.menuChoose = savename.text;
+		}			
+		print (savename.text);
 	}
 	public void DoLoad(){
 		var str = PlayerPrefs.GetString("mapinfo");
@@ -66,7 +75,7 @@ public class sort : MonoBehaviour {
                 	newfloor.transform.parent = gameObject.transform;
                 	newfloor.AddComponent<makePath>();
                 	newfloor.AddComponent<BoxCollider2D>();
-               		var setpos =newfloor.GetComponent<makePath>();
+               		var setpos =newfloor.GetComponent<floorInfo>();
 					newfloor.GetComponent<SpriteRenderer>().color = Color.red;
                 	setpos.x=i;setpos.y=j;
 				}
@@ -75,7 +84,7 @@ public class sort : MonoBehaviour {
                 	newfloor.transform.parent = loadmap.transform;
                 	newfloor.AddComponent<makePath>();
                 	newfloor.AddComponent<BoxCollider2D>();
-                	var setpos =newfloor.GetComponent<makePath>();
+                	var setpos =newfloor.GetComponent<floorInfo>();
                 	setpos.x=i;setpos.y=j;
 				}
 					

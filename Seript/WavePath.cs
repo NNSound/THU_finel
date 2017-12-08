@@ -15,6 +15,7 @@ public class WavePath : MonoBehaviour {
 		for (var i = 0; i < transform.childCount; ++i) {//取得下一個節點物件
 			yield return transform.GetChild(i);
 		}
+		yield return null;
 	}
 
 	public Transform FirstPoint {//找起始點
