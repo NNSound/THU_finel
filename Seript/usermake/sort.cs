@@ -2,95 +2,110 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class sort : MonoBehaviour {
 	public GameObject Wavepath;
-	public GameObject floorObj;
-	public Text savename;
+
+	public GameObject map;
+	public Text savename,wrongmessage;
+
+	bool pathcorrect=false;
 	
-	int nameIndex =0;
-	
-	public void Pathsort(){
-		if(gameObject.transform.childCount >0){			
-			var index = gameObject.transform.GetChild(0);
-			index.name="path"+nameIndex;
-			nameIndex++;
-			index.transform.parent = Wavepath.transform;
-			var getXY = index.GetComponent<floorInfo>();
-			if(Wavepath.transform.childCount>0)
-				GameInfo.floors[getXY.x,getXY.y]=1;
-			else
-				GameInfo.floors[getXY.x,getXY.y]=9;
-			int i=0;
-			while(gameObject.transform.childCount >0){
-				if(i > gameObject.transform.childCount-1){
-					print ("break");
-					break;
-				}
-				else if((index.transform.position - gameObject.transform.GetChild(i).transform.position).magnitude<1.1){//
-					print (gameObject.transform.GetChild(i).name );
-					gameObject.transform.GetChild(i).name = "pathsort"+nameIndex;
-					nameIndex++;
-					index = gameObject.transform.GetChild(i);
-					index.transform.parent = Wavepath.transform;
-					getXY = index.GetComponent<floorInfo>();
-					i=0;
-					GameInfo.floors[getXY.x,getXY.y]=1;
-					continue;
-				}
-				i++;
-			}
-		}
-	}
-	public void showarr(){
-		for(var i=0;i<16;i++)
-			for(int j=0;j<9;j++)
-				print (GameInfo.floors[i,j]);
-	}
-	public void Dosave(){
-		string str=null;
-		for(var i=0;i<16;i++)
-			for(int j=0;j<9;j++){
-				str+=GameInfo.floors[i,j].ToString();
-			}
-		GameInfo.mapStr=str;
+
+	public void Dosave(string str){
 		
-		if(savename.text!=null){
+		GameInfo.mapStr=str;
+		//print (pathcorrect);
+		if(savename.text!=""&&pathcorrect){
 			PlayerPrefs.SetString(savename.text,GameInfo.mapStr);
 			GameInfo.menuChoose = savename.text;
-		}			
-		print (savename.text);
+			print (savename.text);
+			SceneManager.LoadScene("mainMap");
+		}
+		
 	}
-	public void DoLoad(){
-		var str = PlayerPrefs.GetString("mapinfo");
-		//print (str.Length);
-		int len=0;
-		var loadmap = new GameObject();
-		loadmap.name = "loadmap";
-		for(var i=0;i<16;i++)
-			for(int j=0;j<9;j++){
-				var a = str.Substring(i*9+j,1);
-				var setGround = new Vector3(-7.5f+i, -4f+j, 0);				
-				if(a.Equals("1")){
-					GameObject newfloor =  Instantiate(floorObj, setGround, transform.rotation);
-                	newfloor.transform.parent = gameObject.transform;
-                	newfloor.AddComponent<makePath>();
-                	newfloor.AddComponent<BoxCollider2D>();
-               		var setpos =newfloor.GetComponent<floorInfo>();
-					newfloor.GetComponent<SpriteRenderer>().color = Color.red;
-                	setpos.x=i;setpos.y=j;
+
+	void resetmap(){
+		while(gameObject.transform.childCount>0){
+			gameObject.transform.GetChild(gameObject.transform.childCount-1).GetComponent<SpriteRenderer>().color = Color.white;
+			var pos = gameObject.transform.GetChild(gameObject.transform.childCount-1).GetComponent<floorInfo>();
+			gameObject.transform.GetChild(gameObject.transform.childCount-1).parent = map.transform;
+			GameInfo.floors[pos.x,pos.y]=0;
+			pos.floorSet=0;
+			wrongmessage.gameObject.SetActive(true);
+		}
+		print ("wrong path");
+	}
+	public void checkpath(){
+		if(gameObject.transform.childCount>0){
+			for(var i=1;i<15;i++)
+			for(int j=1;j<8;j++){
+				int k=0;
+				if(GameInfo.floors[i,j]>0){//上下左右必有0~2 個1，若無則為起始或是結束這邊不檢查
+					if(GameInfo.floors[i+1,j]>0){k++;}
+					if(GameInfo.floors[i-1,j]>0){k++;}
+					if(GameInfo.floors[i,j+1]>0){k++;}
+					if(GameInfo.floors[i,j-1]>0){k++;}//k=4為十字路口 k=3為T字路口 k=2 為一般道路
+					if(k<2){GameInfo.floors[i,j]=0;}//不是道路
+					else if(k==2){GameInfo.floors[i,j]=1;}
+					else if(k==4){GameInfo.floors[i,j]=2;}
+					else{
+						resetmap();
+						return ;
+					}
 				}
-				else{
-					GameObject newfloor =  Instantiate(floorObj, setGround, transform.rotation);
-                	newfloor.transform.parent = loadmap.transform;
-                	newfloor.AddComponent<makePath>();
-                	newfloor.AddComponent<BoxCollider2D>();
-                	var setpos =newfloor.GetComponent<floorInfo>();
-                	setpos.x=i;setpos.y=j;
-				}
-					
 			}
-		//loadmap.transform.localScale= new Vector3(0.8f,0.8f,0);
-		 Pathsort();
+			int side=0;
+			for(int i =0;i<gameObject.transform.childCount;i++){
+				if(gameObject.transform.GetChild(i).GetComponent<floorInfo>().floorSet==9){//檢查起始與結束
+					side++;
+				}
+			}
+			if(side!=2){
+				resetmap();
+				return ;
+			}
+
+			while(gameObject.transform.childCount>0){
+				int i = gameObject.transform.childCount-1;
+				var a = gameObject.transform.GetChild(i).GetComponent<floorInfo>();
+				if(a.floorSet==9){
+					gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().color = Color.red;
+					gameObject.transform.GetChild(i).GetComponent<floorInfo>().floorSet=9;
+					GameInfo.floors[a.x,a.y]=9;
+					gameObject.transform.GetChild(i).name="sidepath";
+					gameObject.transform.GetChild(i).parent = Wavepath.transform;
+
+				}
+				else if(GameInfo.floors[a.x,a.y]==0){
+					gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().color = Color.white;
+					gameObject.transform.GetChild(i).GetComponent<floorInfo>().floorSet=0;
+					gameObject.transform.GetChild(i).parent = map.transform;
+				}
+				else if(GameInfo.floors[a.x,a.y]==1){
+					gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().color = Color.red;
+					gameObject.transform.GetChild(i).GetComponent<floorInfo>().floorSet=1;
+					gameObject.transform.GetChild(i).name="path";
+					gameObject.transform.GetChild(i).parent = Wavepath.transform;
+				}
+				else if(GameInfo.floors[a.x,a.y]==2){
+					gameObject.transform.GetChild(i).GetComponent<SpriteRenderer>().color = Color.green;
+					gameObject.transform.GetChild(i).GetComponent<floorInfo>().floorSet=2;
+					gameObject.transform.GetChild(i).name="path4";
+					gameObject.transform.GetChild(i).parent = Wavepath.transform;
+				}
+
+			}
+			string str="";
+			for(var i=0;i<16;i++)
+				for(int j=0;j<9;j++){
+					str+=GameInfo.floors[i,j].ToString();
+				}
+			print (str);
+			pathcorrect = true;
+			}
+		
 	}
+
 
 }

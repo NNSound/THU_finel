@@ -4,4 +4,5 @@ using UnityEngine;
 
 public class floorInfo : MonoBehaviour {
 	public int x,y;
+	public int floorSet=0;
 }

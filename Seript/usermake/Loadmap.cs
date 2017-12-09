@@ -12,10 +12,10 @@ public class Loadmap : MonoBehaviour {
 		//map1-1 , map1-2
 		if(GameInfo.menuChoose==null){
 			print ("null");
-			GameInfo.menuChoose = "map1-1";
+			GameInfo.menuChoose = "map1-2";
 		}			
 		var str = PlayerPrefs.GetString(GameInfo.menuChoose);
-		//print (str.Length);
+		print (str);
 		//int len=0;
 		var loadmap = new GameObject();
 		path = new GameObject();
