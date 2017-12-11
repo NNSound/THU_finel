@@ -12,14 +12,18 @@ public class sort : MonoBehaviour {
 	bool pathcorrect=false;
 	
 
-	public void Dosave(string str){
+	public void Dosave(){
 		
-		GameInfo.mapStr=str;
-		//print (pathcorrect);
+		GameInfo.mapStr=savename.text;
+		print (GameInfo.mapStr+pathcorrect);
 		if(savename.text!=""&&pathcorrect){
-			PlayerPrefs.SetString(savename.text,GameInfo.mapStr);
+			string str="";
+			for(var i=0;i<16;i++)
+				for(int j=0;j<9;j++)
+					str+=GameInfo.floors[i,j].ToString();
+				
+			PlayerPrefs.SetString(savename.text,str);
 			GameInfo.menuChoose = savename.text;
-			print (savename.text);
 			SceneManager.LoadScene("mainMap");
 		}
 		
@@ -35,6 +39,7 @@ public class sort : MonoBehaviour {
 			wrongmessage.gameObject.SetActive(true);
 		}
 		print ("wrong path");
+		pathcorrect = false;
 	}
 	public void checkpath(){
 		if(gameObject.transform.childCount>0){
@@ -101,7 +106,6 @@ public class sort : MonoBehaviour {
 				for(int j=0;j<9;j++){
 					str+=GameInfo.floors[i,j].ToString();
 				}
-			print (str);
 			pathcorrect = true;
 			}
 		
