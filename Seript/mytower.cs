@@ -11,7 +11,7 @@ public class mytower : MonoBehaviour {
 	float _lastShotTime;
 	float distance;
 	public float power=10;
-	public static float Cost = 50;
+	public static int Cost = 50;
 	public float attrange = 5;
 
 

@@ -7,6 +7,8 @@ public class Loadmap : MonoBehaviour {
 	GameObject Wavepath,path,startpath;
 	public GameObject makeEmeny;
 	GameObject[,] arrObj=new GameObject[16,9];
+	
+	
 
 	// Use this for initialization
 	void Start () {
@@ -88,7 +90,12 @@ public class Loadmap : MonoBehaviour {
 
 		makeEmeny.transform.position = Wavepath.transform.GetChild(0).position;
 		Wavepath.AddComponent<WavePath>();
-		makeEmeny.GetComponent<WaveGenerator>().Path = Wavepath.GetComponent<WavePath>();
+		var wg = makeEmeny.GetComponent<WaveGenerator>();
+		wg.Path = Wavepath.GetComponent<WavePath>();
+		//陣列長度 時間 怪物 數量
+		//wg.WaveTemplates = new WaveTemplate[3];
+		//wg.setTemples(arr);
+		
 		
 
 	}
@@ -260,7 +267,7 @@ public class Loadmap : MonoBehaviour {
 				break;
 			}
 		}
-		print (breakindex);
+		//print (breakindex);
 
 
 	}

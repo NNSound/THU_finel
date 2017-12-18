@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour {
 	public float Health = 100;
 	public float MaxDistanceToGoal = .1f;
 	public float Speed = 5;
+	public int earn = 30;
 
 	public WavePath Path;
 
@@ -62,6 +63,7 @@ public class Enemy : MonoBehaviour {
 	void OnDeath() {
 		tag = DeadTag;
 		Health = 0;
+		gameObject.transform.parent.GetComponentInParent<gameSystem>().earnmoney(earn);
 		Destroy (gameObject);
 	}
 	
@@ -72,7 +74,7 @@ public class Enemy : MonoBehaviour {
 		home.ShowText();		
 		Destroy(gameObject);
 		if(home.treeHealth<=0){
-			home.endgame();
+			home.endgame("You lose");
 		}
 	}
 	#endregion

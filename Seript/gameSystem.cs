@@ -17,7 +17,7 @@ public class gameSystem : MonoBehaviour {
 	
 	//public make_tower_mouse mtm;
 	public Text CoinText;
-	public float coin=100;
+	public int coin=100;
 	
  	
 	public bool makeTowerPanel(GameObject obj){
@@ -39,6 +39,11 @@ public class gameSystem : MonoBehaviour {
 			Makepanel.gameObject.SetActive(false);
 
 	}
+	public void earnmoney(int earn){
+		coin = coin +earn;
+		ShowText();
+
+	}
 	public void hightlight(GameObject obj){		
 		if(isSelect == obj){
 			isSelect.transform.GetChild(0).gameObject.SetActive(false);
@@ -55,10 +60,10 @@ public class gameSystem : MonoBehaviour {
 			CoinText.text = "Coin : "+coin+" Health:"+treeHealth+"/20";
 		}
 	}
-	public void endgame(){
+	public void endgame(string text){
 		Time.timeScale = 0f;
 		endCanvas.SetActive(true);
-		print ("You lose");
+		print (text);
 	}
 	
 	

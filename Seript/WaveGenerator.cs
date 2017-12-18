@@ -11,6 +11,7 @@ public class WaveGenerator : MonoBehaviour {
 	/// <summary>
 	/// Time between waves in seconds.
 	/// </summary>
+	public GameObject[] emelist;
 	public float DelayBetweenWaves = 30;
 
 	public WavePath Path;
@@ -44,9 +45,11 @@ public class WaveGenerator : MonoBehaviour {
 	public WaveTemplate NextWaveTemplate {
 		get {
 			if (WaveTemplates.Length <= _waves.Count) {
+				GetComponentInParent<gameSystem>().endgame("You Won");
 				// already spawned all waves
 				return null;
 			}
+			//print (WaveTemplates[_waves.Count]);
 			return WaveTemplates[_waves.Count];
 		}
 	}
@@ -62,8 +65,30 @@ public class WaveGenerator : MonoBehaviour {
 			InfoText.text = text;
 		}
 	}
+	public void setTemples(){
+		//WaveTemplates = new WaveTemplate[1];
+
+		
+		/*	
+		print (WaveTemplates.Length);
+		var i = WaveTemplates[0].Amount;
+		var j = WaveTemplates[0].DelayBetweenEnemies;
+		var k = WaveTemplates[0].EnemyPrefab;
+		print (i);
+		*/
+		//int[,] arr = {{1,0,2},{2,1,5},{5,0,10},{1,0,10},{2,1,5}};
+		for(int i=0;i<WaveTemplates.Length;i++){
+			WaveTemplates[i].DelayBetweenEnemies=1f;
+			WaveTemplates[i].EnemyPrefab = emelist[0];
+			WaveTemplates[i].Amount = (i+1)*5;
+		}
+
+		
+	}
 	// Use this for initialization
 	void Start () {
+		
+		//setTemples();
 		if (WaveTemplates == null || WaveTemplates.Length == 0) {
 			Debug.LogError("WaveTemplates are empty");
 		}
@@ -72,12 +97,12 @@ public class WaveGenerator : MonoBehaviour {
 		}
 
 		_waves = new List<Wave> ();
-
 		ResetTimer ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
 		// update all currently running waves
 		foreach (var wave in _waves) {
 			wave.Update();
@@ -92,11 +117,13 @@ public class WaveGenerator : MonoBehaviour {
 	}
 
 	void UpdateWaveProgress() {
+		if(gameObject.transform.childCount>0)
+				return;
 		var now = Time.time;
 		var timeSinceLastUpdate = now - _lastUpdate;
 
-		ShowText("Next wave: " + CurrentWaveNumber + "/"+WaveTemplates.Length+" (" + (DelayBetweenWaves - timeSinceLastUpdate).ToString ("0") + "s)");
-		if (timeSinceLastUpdate >= DelayBetweenWaves) {
+		ShowText("Next wave: " + CurrentWaveNumber + "/"+WaveTemplates.Length);
+		if (timeSinceLastUpdate >= DelayBetweenWaves) {			
 			StartNextWave ();
 		}
 	}
@@ -117,7 +144,7 @@ public class WaveGenerator : MonoBehaviour {
 		// create new wave
 		var wave = new Wave (this);
 		wave.WaveTemplate = NextWaveTemplate;
-		_waves.Add (wave);
+		_waves.Add (wave);	
 
 		// spawn first enemy in new wave
 		wave.Start ();
@@ -136,4 +163,5 @@ public class WaveGenerator : MonoBehaviour {
 		// move enemy to starting position
 		enemy.transform.position = Path.FirstPoint.position;
 	}
+
 }
