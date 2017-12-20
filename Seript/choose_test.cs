@@ -10,37 +10,36 @@ public class choose_test : MonoBehaviour
     public int index = 0;
     private Object[] sps;
     public GameObject pict;
-    public static string SceneName = "map_1_1";//初值
-    void Start()
-    {
-        sps = Resources.LoadAll("simplemap", typeof(Sprite));
+    public static string SceneName = "mainMap";
+    void Start(){
+        sps = Resources.LoadAll("map", typeof(Sprite));
         print (sps.Length);
-
-    }
-    public void cho_lv()
-    {//之後做成直接更改圖片
         Sprite sp = (Sprite)sps[index];
         pict.transform.GetComponent<SpriteRenderer>().sprite = sp;
+        GameInfo.menuChoose=sp.name;
+    }
+    public void cho_lv(){//之後做成直接更改圖片
+        Sprite sp = (Sprite)sps[index];
+        pict.transform.GetComponent<SpriteRenderer>().sprite = sp;
+        GameInfo.menuChoose=sp.name;
         print (sp.name);
     }
-    public void gotoLv()//跳轉至SceneName畫面，依照SceneName內存字串而有所不同
-    {
+    public void gotoLv(){//跳轉至SceneName畫面，依照SceneName內存字串而有所不同
         SceneManager.LoadScene(SceneName);
     }
-    public void pls()
-    {
+    public void gotoMake(){//跳轉至SceneName畫面，依照SceneName內存字串而有所不同
+        SceneManager.LoadScene("userMake");
+    }
+    public void pls(){
 		if (index >= 0 && index < sps.Length-1){
             index++;
             cho_lv();
         }
-       
     }
-    public void dle()
-    {
+    public void dle(){
 		if (index >= 1 && index <= sps.Length){
             index--;
             cho_lv();
         }
-        
     }
 }

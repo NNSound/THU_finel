@@ -32,9 +32,11 @@ public class gameSystem : MonoBehaviour {
 				return;
 			}
 			coin = coin - mytower.Cost;
-			Vector3 me = floor.transform.position;
-            GameObject childTower =  Instantiate(tower, me, transform.rotation);
+            GameObject childTower =  Instantiate(tower, floor.transform.position, transform.rotation);
             childTower.transform.parent = floor.transform;
+
+			childTower.transform.localPosition = new Vector3(0,2,0);
+			
 			ShowText();
 			Makepanel.gameObject.SetActive(false);
 

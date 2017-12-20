@@ -3,33 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO; 
 public class sort : MonoBehaviour {
 	public GameObject Wavepath;
 
 	public GameObject map;
+	public GameObject UIbtn;
+
 	public Text savename,wrongmessage;
+	public Sprite[] roads;
 
 	bool pathcorrect=false;
 	
-
+	private void CaptureScreenshotNormal(string filename){
+        UIbtn.SetActive(false);
+        ScreenCapture.CaptureScreenshot(Application.persistentDataPath+"/"+filename+".png");
+		print ("ScreenCapture");
+    }
 	public void Dosave(){
 		
-		GameInfo.mapStr=savename.text;
+		GameInfo.mapStr=savename.text;//存檔黨名
 		print (GameInfo.mapStr+pathcorrect);
 		if(savename.text!=""&&pathcorrect){
+			CaptureScreenshotNormal(savename.text);
 			string str="";
 			for(var i=0;i<16;i++)
 				for(int j=0;j<9;j++)
 					str+=GameInfo.floors[i,j].ToString();
 				
-			PlayerPrefs.SetString(savename.text,str);
+			//PlayerPrefs.SetString(savename.text,str);
+			dosomething(str,savename.text);
 			GameInfo.menuChoose = savename.text;
-			SceneManager.LoadScene("mainMap");
+			SceneManager.LoadScene("menu");
 		}
 		
 	}
+	public void dosomething(string str,string filename){
+		playerState sav = new playerState();
+		sav.map = str;
+		string saveString = JsonUtility.ToJson(sav);
+		print (saveString);
+		
+		StreamWriter file = new StreamWriter(System.IO.Path.Combine(Application.persistentDataPath, filename));
+        file.Write(saveString);
+        file.Close();
+		print (Application.persistentDataPath);
+		
+	}
 
-	void resetmap(){
+	public void resetmap(){
 		while(gameObject.transform.childCount>0){
 			gameObject.transform.GetChild(gameObject.transform.childCount-1).GetComponent<SpriteRenderer>().color = Color.white;
 			var pos = gameObject.transform.GetChild(gameObject.transform.childCount-1).GetComponent<floorInfo>();
@@ -51,8 +73,8 @@ public class sort : MonoBehaviour {
 					if(GameInfo.floors[i-1,j]>0){k++;}
 					if(GameInfo.floors[i,j+1]>0){k++;}
 					if(GameInfo.floors[i,j-1]>0){k++;}//k=4為十字路口 k=3為T字路口 k=2 為一般道路
-					if(k<2){GameInfo.floors[i,j]=0;}//不是道路
-					else if(k==2){GameInfo.floors[i,j]=1;}
+
+					if(k==2){GameInfo.floors[i,j]=1;}
 					else if(k==4){GameInfo.floors[i,j]=2;}
 					else{
 						resetmap();
@@ -108,8 +130,20 @@ public class sort : MonoBehaviour {
 				}
 			pathcorrect = true;
 			}
+		setRoadpic();
+	}
+	void setRoadpic(){
+		for(int i=0;i<Wavepath.transform.childCount;i++){
+			var obj = Wavepath.transform.GetChild(i);
+			obj.GetComponent<SpriteRenderer>().color = Color.white;
+			if(obj.GetComponent<floorInfo>().x==0||obj.GetComponent<floorInfo>().x==15)
+				obj.GetComponent<SpriteRenderer>().sprite = roads[0];
+			else if(obj.GetComponent<floorInfo>().y==0||obj.GetComponent<floorInfo>().y==8)
+				obj.GetComponent<SpriteRenderer>().sprite = roads[1];
+			else
+				obj.GetComponent<SpriteRenderer>().sprite = roads[2];
+		}
 		
 	}
-
 
 }

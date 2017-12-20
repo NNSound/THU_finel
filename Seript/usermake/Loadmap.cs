@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.IO;
 public class Loadmap : MonoBehaviour {
 	public GameObject [] MapObj=new GameObject[5];
+	public Sprite[] floors;
 	GameObject Wavepath,path,startpath;
 	public GameObject makeEmeny;
 	GameObject[,] arrObj=new GameObject[16,9];
 	
-	
 
 	// Use this for initialization
 	void Start () {
-		//map1-1 , map1-2
-		if(GameInfo.menuChoose==null){
-			print ("null");
-			GameInfo.menuChoose = "test";
-		}
-		//print (GameInfo.menuChoose);
-		var str = PlayerPrefs.GetString(GameInfo.menuChoose);
-		print (str);
+		if(GameInfo.menuChoose==null)
+			GameInfo.menuChoose = "MapLv1";
+		StreamReader file = new StreamReader(System.IO.Path.Combine(Application.streamingAssetsPath, GameInfo.menuChoose));
+        string loadJson = file.ReadToEnd();
+        file.Close();
+		playerState loadData = new playerState();
+        //使用JsonUtillty的FromJson方法將存文字轉成Json
+        loadData = JsonUtility.FromJson<playerState>(loadJson);
+		var str = loadData.map;
+
 		//int len=0;
 		var loadmap = new GameObject();
 		path = new GameObject();
@@ -36,48 +38,51 @@ public class Loadmap : MonoBehaviour {
 		for(var i=0;i<16;i++)//make map
 			for(int j=0;j<9;j++){
 				var a = str.Substring(i*9+j,1);
-				var setGround = new Vector3(-7.5f+i, -4f+j, 0);				
-				if(a.Equals("1")){//一般道路
-					GameObject newfloor =  Instantiate(MapObj[0], setGround, transform.rotation);
+				var setGround = new Vector3(-7.5f+i, -4f+j, 0);
+				if(a.Equals("1")){//一般道路 因為還沒排序所以不命名
+					GameObject newfloor =  Instantiate(MapObj[1], setGround, transform.rotation);
 					arrObj[i,j]=newfloor;
+					newfloor.transform.localScale = new Vector3(0.3f,0.3f,1);
+
                 	newfloor.transform.parent = path.transform;
 					newfloor.AddComponent<floorInfo>();
                		var setpos =newfloor.GetComponent<floorInfo>();
 					setpos.floorSet = 1;
                 	setpos.x=i;setpos.y=j;
-					newfloor.GetComponent<SpriteRenderer>().color = Color.red;
 				}
 				else if(a.Equals("9")){//起始與結束
-					startpath =  Instantiate(MapObj[0], setGround, transform.rotation);
+					startpath =  Instantiate(MapObj[1], setGround, transform.rotation);
 					arrObj[i,j]=startpath;
+					startpath.transform.localScale = new Vector3(0.3f,0.3f,1);
 					startpath.name = "sidepath";
                 	startpath.transform.parent = path.transform;
 					startpath.AddComponent<floorInfo>();
                		var setpos =startpath.GetComponent<floorInfo>();
 					setpos.floorSet = 9;
                 	setpos.x=i;setpos.y=j;
-					startpath.GetComponent<SpriteRenderer>().color = Color.red;
 
 				}
 				else if(a.Equals("2")){//十字路口
-					startpath =  Instantiate(MapObj[0], setGround, transform.rotation);
-					arrObj[i,j]=startpath;
-					startpath.name = "path_X";
-                	startpath.transform.parent = path.transform;
-					startpath.AddComponent<floorInfo>();
-               		var setpos =startpath.GetComponent<floorInfo>();
+					GameObject newfloor =  Instantiate(MapObj[1], setGround, transform.rotation);
+					arrObj[i,j]=newfloor;
+					newfloor.transform.localScale = new Vector3(0.3f,0.3f,1);
+					newfloor.name = "path_X";
+                	newfloor.transform.parent = path.transform;
+					newfloor.AddComponent<floorInfo>();
+               		var setpos =newfloor.GetComponent<floorInfo>();
 					setpos.floorSet = 2;
                 	setpos.x=i;setpos.y=j;
-					startpath.GetComponent<SpriteRenderer>().color = Color.green;
 
 				}
 				else{//空地
 					GameObject newfloor =  Instantiate(MapObj[0], setGround, transform.rotation);
+					newfloor.transform.localScale = new Vector3(0.3f,0.3f,1);
 					arrObj[i,j]=newfloor;
                 	newfloor.transform.parent = loadmap.transform;
 					newfloor.AddComponent<floorInfo>();
 					newfloor.AddComponent<make_tower_mouse>();
 					newfloor.AddComponent<BoxCollider2D>();
+					newfloor.GetComponent<SpriteRenderer>().sprite = floors[Random.Range(0,8)];
                 	var setpos =newfloor.GetComponent<floorInfo>();
                 	setpos.x=i;setpos.y=j;
 				}
@@ -137,6 +142,11 @@ public class Loadmap : MonoBehaviour {
 		Destroy(path);
 		//print (breakindex);
 
+	}
+	public static string LoadResourceTextfile(string path){//never user 
+		string filePath = "SetupData/" + path.Replace(".json", "");
+		TextAsset targetFile = Resources.Load<TextAsset>(filePath);
+		return targetFile.text;
 	}
 	void loadsort(){
 		int pathindex=0;
