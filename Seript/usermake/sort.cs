@@ -18,7 +18,7 @@ public class sort : MonoBehaviour {
 	private void CaptureScreenshotNormal(string filename){
         UIbtn.SetActive(false);
         ScreenCapture.CaptureScreenshot(Application.persistentDataPath+"/"+filename+".png");
-		print ("ScreenCapture");
+		print (Application.persistentDataPath);
     }
 	public void Dosave(){
 		
@@ -44,7 +44,7 @@ public class sort : MonoBehaviour {
 		string saveString = JsonUtility.ToJson(sav);
 		print (saveString);
 		
-		StreamWriter file = new StreamWriter(System.IO.Path.Combine(Application.persistentDataPath, filename));
+		StreamWriter file = new StreamWriter(System.IO.Path.Combine(Application.persistentDataPath, filename+".json"));
         file.Write(saveString);
         file.Close();
 		print (Application.persistentDataPath);
